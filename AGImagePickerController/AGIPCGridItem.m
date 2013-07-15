@@ -90,33 +90,33 @@ static NSUInteger numberOfSelectedGridItems = 0;
     }
 }
 
-- (BOOL)selected
-{
-    BOOL ret;
-    @synchronized (self) { ret = _selected; }
-    
-    return ret;
-}
+//- (BOOL)selected
+//{
+//    BOOL ret;
+//    @synchronized (self) { ret = _selected; }
+//    
+//    return ret;
+//}
 
 - (void)setAsset:(ALAsset *)asset
 {
-    @synchronized (self)
-    {
+//    @synchronized (self)
+//    {
         if (_asset != asset)
         {
             _asset = asset;
             self.thumbnailImageView.image = [UIImage imageWithCGImage:_asset.thumbnail];
         }
-    }
+//    }
 }
 
-- (ALAsset *)asset
-{
-    ALAsset *ret = nil;
-    @synchronized (self) { ret = _asset; }
-    
-    return ret;
-}
+//- (ALAsset *)asset
+//{
+//    ALAsset *ret = nil;
+//    @synchronized (self) { ret = _asset; }
+//    
+//    return ret;
+//}
 
 #pragma mark - Object Lifecycle
 

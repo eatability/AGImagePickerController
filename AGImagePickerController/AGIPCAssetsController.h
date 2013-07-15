@@ -17,9 +17,9 @@
 
 @interface AGIPCAssetsController : UITableViewController<UITableViewDataSource, UITableViewDelegate, AGIPCGridItemDelegate>
 
-@property (strong) ALAssetsGroup *assetsGroup;
-@property (ag_weak, readonly) NSArray *selectedAssets;
-@property (strong) AGImagePickerController *imagePickerController;
+@property (nonatomic, strong) ALAssetsGroup *assetsGroup;
+@property (nonatomic, ag_weak, readonly) NSArray *selectedAssets;
+@property (nonatomic, strong) AGImagePickerController *imagePickerController;
 
 - (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController andAssetsGroup:(ALAssetsGroup *)assetsGroup;
 
