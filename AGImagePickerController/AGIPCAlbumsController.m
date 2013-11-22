@@ -4,10 +4,10 @@
 //
 //  Created by Artur Grigor on 2/16/12.
 //  Copyright (c) 2012 - 2013 Artur Grigor. All rights reserved.
-//  
+//
 //  For the full copyright and license information, please view the LICENSE
 //  file that was distributed with this source code.
-//  
+//
 
 #import "AGIPCAlbumsController.h"
 
@@ -136,16 +136,16 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    
-    ALAssetsGroup *group = (self.assetsGroups)[indexPath.row];
-    [group setAssetsFilter:[ALAssetsFilter allPhotos]];
-    NSUInteger numberOfAssets = group.numberOfAssets;
-    
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", [group valueForProperty:ALAssetsGroupPropertyName]];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", numberOfAssets];
-    [cell.imageView setImage:[UIImage imageWithCGImage:[(ALAssetsGroup *)self.assetsGroups[indexPath.row] posterImage]]];
-	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-	
+    if (self.assetsGroups.count>indexPath.row) {
+        ALAssetsGroup *group = (self.assetsGroups)[indexPath.row];
+        [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+        NSUInteger numberOfAssets = group.numberOfAssets;
+        
+        cell.textLabel.text = [NSString stringWithFormat:@"%@", [group valueForProperty:ALAssetsGroupPropertyName]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", numberOfAssets];
+        [cell.imageView setImage:[UIImage imageWithCGImage:[(ALAssetsGroup *)self.assetsGroups[indexPath.row] posterImage]]];
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+	}
     return cell;
 }
 
@@ -160,7 +160,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{	
+{
 	return 57;
 }
 
@@ -176,9 +176,9 @@
         
         @autoreleasepool {
             
-            void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
+            void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop)
             {
-                if (group == nil) 
+                if (group == nil)
                 {
                     return;
                 }
@@ -203,11 +203,11 @@
             void (^assetGroupEnumberatorFailure)(NSError *) = ^(NSError *error) {
                 NSLog(@"A problem occured. Error: %@", error.localizedDescription);
                 [self.imagePickerController performSelector:@selector(didFail:) withObject:error];
-            };	
+            };
             
             [[AGImagePickerController defaultAssetsLibrary] enumerateGroupsWithTypes:ALAssetsGroupAll
-                                   usingBlock:assetGroupEnumerator 
-                                 failureBlock:assetGroupEnumberatorFailure];
+                                                                          usingBlock:assetGroupEnumerator
+                                                                        failureBlock:assetGroupEnumberatorFailure];
             
         }
         
@@ -229,16 +229,16 @@
 
 - (void)registerForNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(didChangeLibrary:) 
-                                                 name:ALAssetsLibraryChangedNotification 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didChangeLibrary:)
+                                                 name:ALAssetsLibraryChangedNotification
                                                object:[AGImagePickerController defaultAssetsLibrary]];
 }
 
 - (void)unregisterFromNotifications
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self 
-                                                    name:ALAssetsLibraryChangedNotification 
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:ALAssetsLibraryChangedNotification
                                                   object:[AGImagePickerController defaultAssetsLibrary]];
 }
 
