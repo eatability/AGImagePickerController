@@ -4,10 +4,10 @@
 //
 //  Created by Artur Grigor on 17.02.2012.
 //  Copyright (c) 2012 - 2013 Artur Grigor. All rights reserved.
-//  
+//
 //  For the full copyright and license information, please view the LICENSE
 //  file that was distributed with this source code.
-//  
+//
 
 #import "AGIPCAssetsController.h"
 
@@ -79,7 +79,7 @@
     {
         _assetsGroup = theAssetsGroup;
         [_assetsGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
-
+        
         [self reloadData];
     }
 }
@@ -88,10 +88,10 @@
 {
     NSMutableArray *selectedAssets = [NSMutableArray array];
     
-	for (AGIPCGridItem *gridItem in self.assets) 
-    {		
+	for (AGIPCGridItem *gridItem in self.assets)
+    {
 		if (gridItem.selected)
-        {	
+        {
 			[selectedAssets addObject:gridItem.asset];
 		}
 	}
@@ -119,7 +119,10 @@
         [self setupToolbarItems];
         
         // Start loading the assets
-        [self loadAssets];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self loadAssets];
+        });
+        
     }
     
     return self;
@@ -141,8 +144,8 @@
 {
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:self.imagePickerController.numberOfItemsPerRow];
     
-    NSUInteger startIndex = indexPath.row * self.imagePickerController.numberOfItemsPerRow, 
-                 endIndex = startIndex + self.imagePickerController.numberOfItemsPerRow - 1;
+    NSUInteger startIndex = indexPath.row * self.imagePickerController.numberOfItemsPerRow,
+    endIndex = startIndex + self.imagePickerController.numberOfItemsPerRow - 1;
     if (startIndex < self.assets.count)
     {
         if (endIndex > self.assets.count - 1)
@@ -162,12 +165,12 @@
     static NSString *CellIdentifier = @"Cell";
     
     AGIPCGridCell *cell = (AGIPCGridCell *)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) 
-    {		        
+    if (cell == nil)
+    {
         cell = [[AGIPCGridCell alloc] initWithImagePickerController:self.imagePickerController items:[self itemsForRowAtIndexPath:indexPath] andReuseIdentifier:CellIdentifier];
-    }	
-	else 
-    {		
+    }
+	else
+    {
 		cell.items = [self itemsForRowAtIndexPath:indexPath];
 	}
     
@@ -290,9 +293,9 @@
     
     NSInteger totalRows = [self.tableView numberOfRowsInSection:0];
     
-    //Prevents crash if totalRows = 0 (when the album is empty). 
+    //Prevents crash if totalRows = 0 (when the album is empty).
     if (totalRows > 0) {
-
+        
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:totalRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
 }
@@ -374,16 +377,16 @@
 
 - (void)registerForNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(didChangeLibrary:) 
-                                                 name:ALAssetsLibraryChangedNotification 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didChangeLibrary:)
+                                                 name:ALAssetsLibraryChangedNotification
                                                object:[AGImagePickerController defaultAssetsLibrary]];
 }
 
 - (void)unregisterFromNotifications
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self 
-                                                    name:ALAssetsLibraryChangedNotification 
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:ALAssetsLibraryChangedNotification
                                                   object:[AGImagePickerController defaultAssetsLibrary]];
 }
 
